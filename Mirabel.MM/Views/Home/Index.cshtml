@@ -1,0 +1,201 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Mirabel.MM.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/lib/tabulator/dist/js/tabulator.js"></script>
+    <link href="~/lib/tabulator/dist/css/tabulator.css" rel="stylesheet" />
+    <style>
+
+
+        .searchDropdownStyle {
+            padding: 0.375rem 2.25rem 0.375rem 1.1rem !important;
+            display: flex;
+            height: 41px;
+            padding: 12px 24px;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border-radius: 10px !important;
+            border: 1px solid #C4C4C4 !important;
+            background-position: right 1.2rem center !important;
+            font-size: 14px !important;
+            color: #8c8787 !important;
+            font-style: normal !important;
+            font-weight: 600 !important;
+            line-height: 150% !important;
+            box-shadow: none !important;
+        }
+
+        .searchTextStyle {
+            padding: 0.55rem 0.75rem !important;
+            border-radius: 10px !important;
+            border: 1px solid #8c8787 !important;
+            font-size: 14px !important;
+            line-height: 150% !important;
+            width: 100% !important;
+        }
+
+        .searchicon {
+            position: absolute;
+            top: 10px;
+            font-size: 16px;
+            color: #000;
+            position: absolute;
+            right: 20px;
+        }
+
+    </style>
+</head>
+
+
+<body>
+    @*
+    <div class="text-center">
+    <iframe src="http://localhost:3000/ui/Search" style="margin: 0px; width: 1280px; height: 458px;"></iframe>
+    </div *@
+
+    <div class="row px-4" style="display:flex ; justify-content:space-between">
+        <div class="col-5 row">
+            <div class="col">
+                <select disabled class="form-select searchDropdownStyle " aria-label="Select Database">
+                    <option selected>MM</option>
+                </select>
+            </div>
+            <div class="col">
+                <select disabled class="form-select searchDropdownStyle " aria-label="Select Data Table Type">
+                    <option selected>User Details</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-3">
+            <div className="col-xl-3 col-12 px-0 ps-0 ps-sm-3 pb-4 pb-sm-0"
+                 style="position:relative">
+                <input class="form-control searchTextStyle" id="filterInput" type="text" placeholder="Search..." autoComplete="off"></input>
+                <span class="searchicon">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="Dashboard-Table" style="margin-top:25px !important" class="px-4"></div>
+
+</body>
+
+<script>
+
+    var tabledata = [];
+
+    var columns = [
+        { title: "Email", field: "EmailID" },
+        { title: "User Name", field: "CustName" },
+        { title: "Verification Pending", field: "IsPendingVerification" },
+        { title: "Existing User", field: "IsExistingUser" },
+        { title: "Email Sent", field: "IsEmailSent" },
+        { title: "Site Address", field: "SiteAddress" },
+        { title: "DataBase Name", field: "DBName" },
+        { title: "Parent Client", field: "ParentClient" },
+        { title: "Client Status", field: "Clientenabled" },
+        { title: "DS User", field: "DsUser" },
+        { title: "MKM Access", field: "MKMAccess" }
+    ];
+
+
+    $(document).ready(function () {
+        showLoader();
+        var dbname = "MM";
+        var TableName = "UsersTable"
+        LoadData(dbname, TableName);
+
+    });
+
+    $("#filterInput").on("input", function () {
+        const filterText = $(this).val().toLowerCase();
+        // const filteredArray = tabledata.filter(function (item) {
+
+        //     console.log(item);
+        //     return item.toString().toLowerCase().includes(filterText);
+           
+        // });
+        
+        const filteredArray = tabledata.filter(item => {
+                const values = Object.values(item)
+                    .map(value => Array.isArray(value) ? value.join(" ") : value)
+                .join(" ").toString().toLowerCase();
+
+            return values.includes(filterText.toLowerCase());
+        });
+        loadTable(filteredArray);
+        
+    });
+
+
+    function LoadData(dbname, TableName) {
+
+        var IPJson = JSON.stringify({ DBName: dbname, TableName: TableName });
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("LoadDashboard", "Home")',
+            contentType: "application/json; charset=utf-8",
+            data: IPJson,
+
+            success: function (data) {
+                var result = JSON.parse(data);
+                var data = JSON.parse(result.ResultSet);
+                tabledata = data;
+                loadTable(tabledata);
+                hideLoader();
+            },
+            error: function (reponse) {
+                alert("Error while Login. Pleae refresh page and try again.");
+                hideLoader();
+            }
+        });
+
+    };
+
+    function loadTable(data) {
+        var table = new Tabulator("#Dashboard-Table", {
+            data: data,
+            columns: columns,
+            autoColumns: false,
+            resizeObserver: false,
+            layout: "fitData",
+            resizableColumnFit: true,
+            renderHorizontal: "virtual",
+            placeholder: "No Data Found",
+            rowHeight: 50,
+            addRowPos: "top",
+            history: true,
+            pagination: "local",
+            // paginationSize: 10,
+            // paginationSizeSelector: [10, 20, 30],
+            paginationSize: 10,
+            paginationSizeSelector: [10, 15, 30, 50],
+            movableColumns: true,
+            paginationCounter: "rows",
+            movableColumns: false,
+            paginationButtonCount: 5,
+            columnDefaults: {
+                tooltip: false,
+            },
+        });
+    };
+
+
+
+</script>
+
+       

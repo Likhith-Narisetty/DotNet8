@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mirabel.MM", "Mirabel.MM\Mirabel.MM.csproj", "{6B6951EC-21C0-49C2-ACD2-F45E9E9C3DBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B6951EC-21C0-49C2-ACD2-F45E9E9C3DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B6951EC-21C0-49C2-ACD2-F45E9E9C3DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B6951EC-21C0-49C2-ACD2-F45E9E9C3DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B6951EC-21C0-49C2-ACD2-F45E9E9C3DBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C4950EB-2D47-4872-8126-5FE67656C87C}
+	EndGlobalSection
+EndGlobal

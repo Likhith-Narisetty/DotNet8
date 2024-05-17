@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Mirabel.MM.props" />
+</Project>

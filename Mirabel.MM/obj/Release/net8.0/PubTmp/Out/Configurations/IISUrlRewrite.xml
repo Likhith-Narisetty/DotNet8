@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<rewrite>
+	<rules>
+		<rule name="Login" stopProcessing="true">
+			<match url="^Login$" />
+			<action type="Rewrite" url="Home/Login" appendQueryString="false"/>
+		</rule>
+
+		<rule name="Dashboard" stopProcessing="true">
+			<match url="^Dashboard$" />
+			<action type="Rewrite" url="Home/Index" appendQueryString="false"/>
+		</rule>
+		
+	</rules>
+</rewrite>
